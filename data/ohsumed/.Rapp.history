@@ -1,0 +1,1070 @@
+require(latex2exp)#
+library(ggplot2)#
+library(gridExtra)#
+library("grid")#
+rm(list=ls())#
+grid_arrange_shared_legend <- function(...) {#
+    plots <- list(...)#
+    g <- ggplotGrob(plots[[1]] + theme(legend.position="bottom"))$grobs#
+    legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]#
+    lheight <- sum(legend$height)#
+    grid.arrange(#
+        do.call(arrangeGrob, lapply(plots, function(x)#
+            x + theme(legend.position="none"))),#
+        legend,#
+        ncol = 1,#
+        heights = unit.c(unit(1, "npc") - lheight, lheight)#
+        )#
+        }#
+#
+folderName		<-	"10_10_2016_21:33"#
+myFiles			<-	list.files(paste0("regularizedScratchResultsSVM/",folderName))#
+#
+dataString	<-  c("r8","r52")#
+source("aistatsPaperPlots.R")
+rm(list=ls())
+i			<-	1
+folderName
+folderName		<-	"10_10_2016_21:33"
+plots		<-	 list()
+dataName
+dataName="20ng"
+myFiles			<-	list.files(paste0("regularizedScratchResultsSVM/",folderName))
+currData	<-	 myFiles[grep(dataName,myFiles)]#
+currData	<-	currData[-grep(".png",currData)]#
+end			<-	floor(max(as.numeric(unlist(lapply(strsplit(currData,"tfidf"),function(x)x[2])))))/10
+end
+for (final in c(2000)){#
+		for(thresh in c(.5,.7,.9)){#
+		final2		<-	final#
+		breaks		<- round(final2/20)	#
+		if(final>=end){final2	<-end}#
+		print(final2)#
+		myseqs	<-	seq(breaks,final2,breaks)#
+		string	<-	 paste0(final2,as.character(thresh))#
+		obj		<-	 get(load(paste0("regularizedScratchResultsSVM/",folderName,"/",currData[grep(string,currData)])))#
+		curr	<-	cbind(c(0,myseqs),rbind(0,data.frame(obj[,c("numFeatures")])))#
+		names(curr)	<-c("Seq","numFeatures")	#
+#
+plots[[i]]<- ggplot(data=curr, aes(x=Seq, y=numFeatures))+geom_line()+theme(axis.title = element_text(size=12,color="chocolate"),title=element_text(size=12,color="chocolate"),legend.text=element_text(size=12))+ggtitle("")+xlab("# Data Points Seen")+ylab(paste("# of Provided Features"))+labs(title=TeX(paste(dataName,sprintf("$\\alpha = %g$", thresh),sep=",")))#
+# df1	<- cbind.data.frame(curr$Seq,curr$numSV,as.factor(rep("SVM",nrow(curr))))#
+# names(df1)=c("Seq","numSupVecs","Models")#
+# df2	<- cbind.data.frame(curr$Seq,curr$numSVFeed1,as.factor(rep("SVM-FF",nrow(curr))))#
+# names(df2)=c("Seq","numSupVecs","Models")#
+#
+# df		<-	rbind.data.frame(df1,df2)#
+# plots[[i]]<- ggplot(data=df, aes(x=Seq, y=numSupVecs,group=Models))+geom_line(aes(linetype=Models,colour=Models))+theme(axis.title = element_text(size=12,color="chocolate"),title=element_text(size=12,color="chocolate"),legend.text=element_text(size=12))+ggtitle("")+ylab(paste("# of Sup. Vectors"))+xlab("# Data Points Seen")+labs(title=TeX(paste(dataName,sprintf("$\\alpha = %g$", thresh),sep=",")))#
+#
+# plots[[i]]	<-	ggplot(data=curr, aes(x=Seq, y=numSV,colour="SVM"))+geom_line()+geom_line(data=curr,aes(x=Seq,y= numSVFeed1,colour="SVM-FF"))+theme(axis.title = element_text(size=12,color="chocolate"),title=element_text(size=12,color="chocolate"))+ggtitle("")+ylab(paste("# of Sup. Vectors"))+xlab("# Data Points Seen")+theme(legend.title = element_text(colour="chocolate",size=12),legend.text=element_text(size=12))+labs(title=TeX(paste(dataName,sprintf("$\\alpha = %g$", thresh),sep=",")))+scale_color_discrete(name="Models")#
+print(i)#
+i	<- i+1#
+}#
+}#
+}
+breaks
+final2
+myseqs	<-	seq(breaks,final2,breaks)
+string	<-	 paste0(final2,as.character(thresh))
+string
+obj		<-	 get(load(paste0("regularizedScratchResultsSVM/",folderName,"/",currData[grep(string,currData)])))
+curr	<-	cbind(c(0,myseqs),rbind(0,data.frame(obj[,c("numFeatures")])))
+curr
+obj
+obj		<-	as.data.frame(t(sapply(1:nrow(obj[[1]]), function(x){#
+						row	<- colMeans(t(sapply(1:length(obj),function(xx){	#
+						unlist(obj[[xx]][x,])#
+						}#
+							)))#
+						})))
+curr	<-	cbind(c(0,myseqs),rbind(0,data.frame(obj[,c("numFeatures")])))
+names(curr)	<-c("Seq","numFeatures")
+ggplot(data=curr, aes(x=Seq, y=numFeatures))+geom_line()+theme(axis.title = element_text(size=12,color="chocolate"),title=element_text(size=12,color="chocolate"),legend.text=element_text(size=12))+ggtitle("")+xlab("# Data Points Seen")+ylab(paste("# of Provided Features"))+labs(title=TeX(paste(dataName,sprintf("$\\alpha = %g$", thresh),sep=",")))
+folderName
+i			<-	1#
+folderName		<-	"10_10_2016_21:33"#
+plots		<-	 list()#
+thresh=.5#
+for (dataName in c("20ng","webkb","r8","r52","cade","ohsumed")){#
+myFiles			<-	list.files(paste0("regularizedScratchResultsSVM/",folderName))#
+currData	<-	 myFiles[grep(dataName,myFiles)]#
+currData	<-	currData[-grep(".png",currData)]#
+end			<-	floor(max(as.numeric(unlist(lapply(strsplit(currData,"tfidf"),function(x)x[2])))))/10
+for (final in c(2000)){#
+		final2		<-	final#
+		breaks		<- round(final2/20)	#
+		if(final>=end){final2	<-end}#
+		print(final2)#
+		myseqs	<-	seq(breaks,final2,breaks)#
+		string	<-	 paste0(final2,as.character(thresh))#
+		obj		<-	 get(load(paste0("regularizedScratchResultsSVM/",folderName,"/",currData[grep(string,currData)])))#
+		obj		<-	as.data.frame(t(sapply(1:nrow(obj[[1]]), function(x){#
+						row	<- colMeans(t(sapply(1:length(obj),function(xx){	#
+						unlist(obj[[xx]][x,])#
+						}#
+							)))#
+						})))#
+		curr	<-	cbind(c(0,myseqs),rbind(0,obj[,c("numSV","numSVFeed1")]))#
+		names(curr)[1]	<-	"Seq"#
+#
+df1	<- cbind.data.frame(curr$Seq,curr$numSV,as.factor(rep("SVM",nrow(curr))))#
+names(df1)=c("Seq","numSupVecs","Models")#
+df2	<- cbind.data.frame(curr$Seq,curr$numSVFeed1,as.factor(rep("SVM-FF",nrow(curr))))#
+names(df2)=c("Seq","numSupVecs","Models")#
+#
+df		<-	rbind.data.frame(df1,df2)#
+plots[[i]]<- ggplot(data=df, aes(x=Seq, y=numSupVecs,group=Models))+geom_line(aes(linetype=Models,colour=Models))+theme(axis.title = element_text(size=12,color="chocolate"),title=element_text(size=12,color="chocolate"),legend.text=element_text(size=12))+ggtitle("")+ylab(paste("# of Sup. Vectors"))+xlab("# Data Points Seen")+labs(title=TeX(paste(dataName,sprintf("$\\alpha = %g$", thresh),sep=",")))#
+#
+# plots[[i]]	<-	ggplot(data=curr, aes(x=Seq, y=numSV,colour="SVM"))+geom_line()+geom_line(data=curr,aes(x=Seq,y= numSVFeed1,colour="SVM-FF"))+theme(axis.title = element_text(size=12,color="chocolate"),title=element_text(size=12,color="chocolate"))+ggtitle("")+ylab(paste("# of Sup. Vectors"))+xlab("# Data Points Seen")+theme(legend.title = element_text(colour="chocolate",size=12),legend.text=element_text(size=12))+labs(title=TeX(paste(dataName,sprintf("$\\alpha = %g$", thresh),sep=",")))+scale_color_discrete(name="Models")#
+print(i)#
+i	<- i+1#
+}#
+}
+grid_arrange_shared_legend(plots[[1]],plots[[2]],plots[[3]],plots[[4]],plots[[5]],plots[[6]])
+grid_arrange_shared_legend <- function(...) {#
+    plots <- list(...)#
+    g <- ggplotGrob(plots[[1]] + theme(legend.position="bottom"))$grobs#
+    legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]#
+    lheight <- sum(legend$height)#
+    grid.arrange(#
+        do.call(arrangeGrob, lapply(plots, function(x)#
+            x + theme(legend.position="none"))),#
+        legend,#
+        ncol = 1,#
+        heights = unit.c(unit(1, "npc") - lheight, lheight)#
+        )#
+        }
+grid_arrange_shared_legend(plots[[1]],plots[[2]],plots[[3]],plots[[4]],plots[[5]],plots[[6]])
+g	<- grid_arrange_shared_legend(plots[[1]],plots[[2]],plots[[3]],plots[[4]],plots[[5]],plots[[6]])
+i			<-	1#
+folderName		<-	"10_10_2016_21:33"#
+plots		<-	 list()#
+thresh=.9#
+for (dataName in c("20ng","webkb","r8","r52","cade","ohsumed")){#
+myFiles			<-	list.files(paste0("regularizedScratchResultsSVM/",folderName))#
+currData	<-	 myFiles[grep(dataName,myFiles)]#
+currData	<-	currData[-grep(".png",currData)]#
+end			<-	floor(max(as.numeric(unlist(lapply(strsplit(currData,"tfidf"),function(x)x[2])))))/10	#
+#end		<-	as.numeric(strsplit(strsplit(rev(currData)[1],"0.9",fixed=TRUE)[[1]],"tfidf")[[1]][2])#
+for (final in c(2000)){#
+		final2		<-	final#
+		breaks		<- round(final2/20)	#
+		if(final>=end){final2	<-end}#
+		print(final2)#
+		myseqs	<-	seq(breaks,final2,breaks)#
+		string	<-	 paste0(final2,as.character(thresh))#
+		obj		<-	 get(load(paste0("regularizedScratchResultsSVM/",folderName,"/",currData[grep(string,currData)])))#
+		obj		<-	as.data.frame(t(sapply(1:nrow(obj[[1]]), function(x){#
+						row	<- colMeans(t(sapply(1:length(obj),function(xx){	#
+						unlist(obj[[xx]][x,])#
+						}#
+							)))#
+						})))#
+		curr	<-	cbind(c(0,myseqs),rbind(0,obj[,c("numSV","numSVFeed1")]))#
+		names(curr)[1]	<-	"Seq"#
+#
+df1	<- cbind.data.frame(curr$Seq,curr$numSV,as.factor(rep("SVM",nrow(curr))))#
+names(df1)=c("Seq","numSupVecs","Models")#
+df2	<- cbind.data.frame(curr$Seq,curr$numSVFeed1,as.factor(rep("SVM-FF",nrow(curr))))#
+names(df2)=c("Seq","numSupVecs","Models")#
+#
+df		<-	rbind.data.frame(df1,df2)#
+plots[[i]]<- ggplot(data=df, aes(x=Seq, y=numSupVecs,group=Models))+geom_line(aes(linetype=Models,colour=Models))+theme(axis.title = element_text(size=12,color="chocolate"),title=element_text(size=12,color="chocolate"),legend.text=element_text(size=12))+ggtitle("")+ylab(paste("# of Sup. Vectors"))+xlab("# Data Points Seen")+labs(title=TeX(paste(dataName,sprintf("$\\alpha = %g$", thresh),sep=",")))#
+#
+# plots[[i]]	<-	ggplot(data=curr, aes(x=Seq, y=numSV,colour="SVM"))+geom_line()+geom_line(data=curr,aes(x=Seq,y= numSVFeed1,colour="SVM-FF"))+theme(axis.title = element_text(size=12,color="chocolate"),title=element_text(size=12,color="chocolate"))+ggtitle("")+ylab(paste("# of Sup. Vectors"))+xlab("# Data Points Seen")+theme(legend.title = element_text(colour="chocolate",size=12),legend.text=element_text(size=12))+labs(title=TeX(paste(dataName,sprintf("$\\alpha = %g$", thresh),sep=",")))+scale_color_discrete(name="Models")#
+print(i)#
+i	<- i+1#
+}#
+}#
+#
+g	<- grid_arrange_shared_legend(plots[[1]],plots[[2]],plots[[3]],plots[[4]],plots[[5]],plots[[6]])
+i			<-	1#
+folderName		<-	"10_10_2016_21:33"#
+plots		<-	 list()#
+thresh=.5#
+for (dataName in c("20ng","webkb","r8","r52","cade","ohsumed")){#
+myFiles			<-	list.files(paste0("regularizedScratchResultsSVM/",folderName))#
+currData	<-	 myFiles[grep(dataName,myFiles)]#
+currData	<-	currData[-grep(".png",currData)]#
+end			<-	floor(max(as.numeric(unlist(lapply(strsplit(currData,"tfidf"),function(x)x[2])))))/10	#
+#end		<-	as.numeric(strsplit(strsplit(rev(currData)[1],"0.9",fixed=TRUE)[[1]],"tfidf")[[1]][2])#
+for (final in c(2000)){#
+		final2		<-	final#
+		breaks		<- round(final2/20)	#
+		if(final>=end){final2	<-end}#
+		print(final2)#
+		myseqs	<-	seq(breaks,final2,breaks)#
+		string	<-	 paste0(final2,as.character(thresh))#
+		obj		<-	 get(load(paste0("regularizedScratchResultsSVM/",folderName,"/",currData[grep(string,currData)])))#
+		obj		<-	as.data.frame(t(sapply(1:nrow(obj[[1]]), function(x){#
+						row	<- colMeans(t(sapply(1:length(obj),function(xx){	#
+						unlist(obj[[xx]][x,])#
+						}#
+							)))#
+						})))#
+		curr	<-	cbind(c(0,myseqs),rbind(0,obj[,c("numSV","numSVFeed1")]))#
+		names(curr)[1]	<-	"Seq"#
+#
+df1	<- cbind.data.frame(curr$Seq,curr$numSV,as.factor(rep("SVM",nrow(curr))))#
+names(df1)=c("Seq","numSupVecs","Models")#
+df2	<- cbind.data.frame(curr$Seq,curr$numSVFeed1,as.factor(rep("SVM-FF",nrow(curr))))#
+names(df2)=c("Seq","numSupVecs","Models")#
+#
+df		<-	rbind.data.frame(df1,df2)#
+plots[[i]]<- ggplot(data=df, aes(x=Seq, y=numSupVecs,group=Models))+geom_line(aes(linetype=Models,colour=Models))+theme(axis.title = element_text(size=12,color="chocolate"),title=element_text(size=12,color="chocolate"),legend.text=element_text(size=12))+ggtitle("")+ylab(paste("# of Sup. Vectors"))+xlab("# Data Points Seen")+labs(title=TeX(paste(dataName,sprintf("$\\alpha = %g$", thresh),sep=",")))#
+#
+# plots[[i]]	<-	ggplot(data=curr, aes(x=Seq, y=numSV,colour="SVM"))+geom_line()+geom_line(data=curr,aes(x=Seq,y= numSVFeed1,colour="SVM-FF"))+theme(axis.title = element_text(size=12,color="chocolate"),title=element_text(size=12,color="chocolate"))+ggtitle("")+ylab(paste("# of Sup. Vectors"))+xlab("# Data Points Seen")+theme(legend.title = element_text(colour="chocolate",size=12),legend.text=element_text(size=12))+labs(title=TeX(paste(dataName,sprintf("$\\alpha = %g$", thresh),sep=",")))+scale_color_discrete(name="Models")#
+print(i)#
+i	<- i+1#
+}#
+}#
+#
+g	<- grid_arrange_shared_legend(plots[[1]],plots[[2]],plots[[3]],plots[[4]],plots[[5]],plots[[6]])
+g	<- grid_arrange_shared_legend(plots[[1]],plots[[2]],plots[[3]],plots[[4]],plots[[5]],plots[[6]])
+png(filename=paste("../../AISTATS16/AISTATS_PAPER/pics/AISTATSnumSvS2.png"))
+grid.draw(g)
+dev.off()
+g	<- grid_arrange_shared_legend(plots[[1]],plots[[2]],plots[[3]],plots[[4]],plots[[5]],plots[[6]])
+png(filename=paste("../../AISTATS16/AISTATS-PAPER/pics/AISTATSnumSvS2.png"))#
+grid.draw(g)#
+dev.off()
+i			<-	1#
+folderName		<-	"10_10_2016_21:33"#
+plots		<-	 list()#
+thresh=.9#
+for (dataName in c("20ng","webkb","r8","r52","cade","ohsumed")){#
+myFiles			<-	list.files(paste0("regularizedScratchResultsSVM/",folderName))#
+currData	<-	 myFiles[grep(dataName,myFiles)]#
+currData	<-	currData[-grep(".png",currData)]#
+end			<-	floor(max(as.numeric(unlist(lapply(strsplit(currData,"tfidf"),function(x)x[2])))))/10	#
+#end		<-	as.numeric(strsplit(strsplit(rev(currData)[1],"0.9",fixed=TRUE)[[1]],"tfidf")[[1]][2])#
+for (final in c(500)){#
+		final2		<-	final#
+		breaks		<- round(final2/20)	#
+		if(final>=end){final2	<-end}#
+		print(final2)#
+		myseqs	<-	seq(breaks,final2,breaks)#
+		string	<-	 paste0(final2,as.character(thresh))#
+		obj		<-	 get(load(paste0("regularizedScratchResultsSVM/",folderName,"/",currData[grep(string,currData)])))#
+		obj		<-	as.data.frame(t(sapply(1:nrow(obj[[1]]), function(x){#
+						row	<- colMeans(t(sapply(1:length(obj),function(xx){	#
+						unlist(obj[[xx]][x,])#
+						}#
+							)))#
+						})))#
+		curr	<-	cbind(c(0,myseqs),rbind(0,obj[,c("numSV","numSVFeed1")]))#
+		names(curr)[1]	<-	"Seq"#
+#
+df1	<- cbind.data.frame(curr$Seq,curr$numSV,as.factor(rep("SVM",nrow(curr))))#
+names(df1)=c("Seq","numSupVecs","Models")#
+df2	<- cbind.data.frame(curr$Seq,curr$numSVFeed1,as.factor(rep("SVM-FF",nrow(curr))))#
+names(df2)=c("Seq","numSupVecs","Models")#
+#
+df		<-	rbind.data.frame(df1,df2)#
+plots[[i]]<- ggplot(data=df, aes(x=Seq, y=numSupVecs,group=Models))+geom_line(aes(linetype=Models,colour=Models))+theme(axis.title = element_text(size=12,color="chocolate"),title=element_text(size=12,color="chocolate"),legend.text=element_text(size=12))+ggtitle("")+ylab(paste("# of Sup. Vectors"))+xlab("# Data Points Seen")+labs(title=TeX(paste(dataName,sprintf("$\\alpha = %g$", thresh),sep=",")))#
+#
+# plots[[i]]	<-	ggplot(data=curr, aes(x=Seq, y=numSV,colour="SVM"))+geom_line()+geom_line(data=curr,aes(x=Seq,y= numSVFeed1,colour="SVM-FF"))+theme(axis.title = element_text(size=12,color="chocolate"),title=element_text(size=12,color="chocolate"))+ggtitle("")+ylab(paste("# of Sup. Vectors"))+xlab("# Data Points Seen")+theme(legend.title = element_text(colour="chocolate",size=12),legend.text=element_text(size=12))+labs(title=TeX(paste(dataName,sprintf("$\\alpha = %g$", thresh),sep=",")))+scale_color_discrete(name="Models")#
+print(i)#
+i	<- i+1#
+}#
+}#
+#
+g	<- grid_arrange_shared_legend(plots[[1]],plots[[2]],plots[[3]],plots[[4]],plots[[5]],plots[[6]])#
+#
+#,plots[[5]],plots[[6]]),plots[[7]],plots[[8]],#
+#plots[[9]])#
+#,plots[[10]],plots[[11]],plots[[12]])#
+png(filename=paste("../../AISTATS16/AISTATS-PAPER/pics/AISTATSnumSVs.png"))#
+grid.draw(g)#
+dev.off()
+i			<-	1#
+folderName		<-	"10_10_2016_21:33"#
+plots		<-	 list()#
+thresh=.5#
+for (dataName in c("20ng","webkb","r8","r52","cade","ohsumed")){#
+myFiles			<-	list.files(paste0("regularizedScratchResultsSVM/",folderName))#
+currData	<-	 myFiles[grep(dataName,myFiles)]#
+currData	<-	currData[-grep(".png",currData)]#
+end			<-	floor(max(as.numeric(unlist(lapply(strsplit(currData,"tfidf"),function(x)x[2])))))/10	#
+#end		<-	as.numeric(strsplit(strsplit(rev(currData)[1],"0.9",fixed=TRUE)[[1]],"tfidf")[[1]][2])#
+for (final in c(500)){#
+		final2		<-	final#
+		breaks		<- round(final2/20)	#
+		if(final>=end){final2	<-end}#
+		print(final2)#
+		myseqs	<-	seq(breaks,final2,breaks)#
+		string	<-	 paste0(final2,as.character(thresh))#
+		obj		<-	 get(load(paste0("regularizedScratchResultsSVM/",folderName,"/",currData[grep(string,currData)])))#
+		obj		<-	as.data.frame(t(sapply(1:nrow(obj[[1]]), function(x){#
+						row	<- colMeans(t(sapply(1:length(obj),function(xx){	#
+						unlist(obj[[xx]][x,])#
+						}#
+							)))#
+						})))#
+		curr	<-	cbind(c(0,myseqs),rbind(0,obj[,c("numSV","numSVFeed1")]))#
+		names(curr)[1]	<-	"Seq"#
+#
+df1	<- cbind.data.frame(curr$Seq,curr$numSV,as.factor(rep("SVM",nrow(curr))))#
+names(df1)=c("Seq","numSupVecs","Models")#
+df2	<- cbind.data.frame(curr$Seq,curr$numSVFeed1,as.factor(rep("SVM-FF",nrow(curr))))#
+names(df2)=c("Seq","numSupVecs","Models")#
+#
+df		<-	rbind.data.frame(df1,df2)#
+plots[[i]]<- ggplot(data=df, aes(x=Seq, y=numSupVecs,group=Models))+geom_line(aes(linetype=Models,colour=Models))+theme(axis.title = element_text(size=12,color="chocolate"),title=element_text(size=12,color="chocolate"),legend.text=element_text(size=12))+ggtitle("")+ylab(paste("# of Sup. Vectors"))+xlab("# Data Points Seen")+labs(title=TeX(paste(dataName,sprintf("$\\alpha = %g$", thresh),sep=",")))#
+#
+# plots[[i]]	<-	ggplot(data=curr, aes(x=Seq, y=numSV,colour="SVM"))+geom_line()+geom_line(data=curr,aes(x=Seq,y= numSVFeed1,colour="SVM-FF"))+theme(axis.title = element_text(size=12,color="chocolate"),title=element_text(size=12,color="chocolate"))+ggtitle("")+ylab(paste("# of Sup. Vectors"))+xlab("# Data Points Seen")+theme(legend.title = element_text(colour="chocolate",size=12),legend.text=element_text(size=12))+labs(title=TeX(paste(dataName,sprintf("$\\alpha = %g$", thresh),sep=",")))+scale_color_discrete(name="Models")#
+print(i)#
+i	<- i+1#
+}#
+}#
+#
+g	<- grid_arrange_shared_legend(plots[[1]],plots[[2]],plots[[3]],plots[[4]],plots[[5]],plots[[6]])#
+#
+#,plots[[5]],plots[[6]]),plots[[7]],plots[[8]],#
+#plots[[9]])#
+#,plots[[10]],plots[[11]],plots[[12]])#
+png(filename=paste("../../AISTATS16/AISTATS-PAPER/pics/AISTATSnumSVs.png"))#
+grid.draw(g)#
+dev.off()
+rm(list=ls())
+grid_arrange_shared_legend <- function(...) {#
+    plots <- list(...)#
+    g <- ggplotGrob(plots[[1]] + theme(legend.position="bottom"))$grobs#
+    legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]#
+    lheight <- sum(legend$height)#
+    grid.arrange(#
+        do.call(arrangeGrob, lapply(plots, function(x)#
+            x + theme(legend.position="none"))),#
+        legend,#
+        ncol = 1,#
+        heights = unit.c(unit(1, "npc") - lheight, lheight)#
+        )#
+        }#
+#
+folderName		<-	"10_10_2016_21:33"#
+myFiles			<-	list.files(paste0("regularizedScratchResultsSVM/",folderName))
+dataName	<-	"20ng"
+source("aistatsAppendixPlots.R")
+rm(list=ls())#
+grid_arrange_shared_legend <- function(...) {#
+    plots <- list(...)#
+    g <- ggplotGrob(plots[[1]] + theme(legend.position="bottom"))$grobs#
+    legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]#
+    lheight <- sum(legend$height)#
+    grid.arrange(#
+        do.call(arrangeGrob, lapply(plots, function(x)#
+            x + theme(legend.position="none"))),#
+        legend,#
+        ncol = 1,#
+        heights = unit.c(unit(1, "npc") - lheight, lheight)#
+        )#
+        }#
+#
+folderName		<-	"10_10_2016_21:33"#
+myFiles			<-	list.files(paste0("regularizedScratchResultsSVM/",folderName))
+dataName	<-	"20ng"#
+source("aistatsAppendixPlots.R")
+grid_arrange_shared_legend <- function(...) {#
+    plots <- list(...)#
+    g <- ggplotGrob(plots[[1]] + theme(legend.position="bottom"))$grobs#
+    legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]#
+    lheight <- sum(legend$height)#
+    grid.arrange(#
+        do.call(arrangeGrob, lapply(plots, function(x)#
+            x + theme(legend.position="none"))),#
+        legend,#
+        ncol = 1,#
+        heights = unit.c(unit(1, "npc") - lheight, lheight)#
+        )#
+        }#
+#
+folderName		<-	"10_10_2016_21:33"#
+myFiles			<-	list.files(paste0("regularizedScratchResultsSVM/",folderName))#
+#
+#dataString	<-  c("r8","r52")#
+#source("aistatsPaperPlots.R")#
+#
+#############
+dataString	<-	c("20ng","webkb","r8","r52","cade","ohsumed")#
+dataName	<-	"webkb"#
+source("aistatsAppendixPlots.R")
+rm(list=ls())#
+grid_arrange_shared_legend <- function(...) {#
+    plots <- list(...)#
+    g <- ggplotGrob(plots[[1]] + theme(legend.position="bottom"))$grobs#
+    legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]#
+    lheight <- sum(legend$height)#
+    grid.arrange(#
+        do.call(arrangeGrob, lapply(plots, function(x)#
+            x + theme(legend.position="none"))),#
+        legend,#
+        ncol = 1,#
+        heights = unit.c(unit(1, "npc") - lheight, lheight)#
+        )#
+        }#
+#
+folderName		<-	"10_10_2016_21:33"#
+myFiles			<-	list.files(paste0("regularizedScratchResultsSVM/",folderName))#
+#
+#dataString	<-  c("r8","r52")#
+#source("aistatsPaperPlots.R")#
+#
+#############
+dataString	<-	c("20ng","webkb","r8","r52","cade","ohsumed")#
+dataName	<-	"r8"#
+source("aistatsAppendixPlots.R")
+rm(list=ls())#
+grid_arrange_shared_legend <- function(...) {#
+    plots <- list(...)#
+    g <- ggplotGrob(plots[[1]] + theme(legend.position="bottom"))$grobs#
+    legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]#
+    lheight <- sum(legend$height)#
+    grid.arrange(#
+        do.call(arrangeGrob, lapply(plots, function(x)#
+            x + theme(legend.position="none"))),#
+        legend,#
+        ncol = 1,#
+        heights = unit.c(unit(1, "npc") - lheight, lheight)#
+        )#
+        }#
+#
+folderName		<-	"10_10_2016_21:33"#
+myFiles			<-	list.files(paste0("regularizedScratchResultsSVM/",folderName))#
+#
+#dataString	<-  c("r8","r52")#
+#source("aistatsPaperPlots.R")#
+#
+#############
+#dataString	<-	c("20ng","webkb","r8","r52","cade","ohsumed")#
+dataName	<-	"r52"#
+source("aistatsAppendixPlots.R")
+rm(list=ls())#
+grid_arrange_shared_legend <- function(...) {#
+    plots <- list(...)#
+    g <- ggplotGrob(plots[[1]] + theme(legend.position="bottom"))$grobs#
+    legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]#
+    lheight <- sum(legend$height)#
+    grid.arrange(#
+        do.call(arrangeGrob, lapply(plots, function(x)#
+            x + theme(legend.position="none"))),#
+        legend,#
+        ncol = 1,#
+        heights = unit.c(unit(1, "npc") - lheight, lheight)#
+        )#
+        }#
+#
+folderName		<-	"10_10_2016_21:33"#
+myFiles			<-	list.files(paste0("regularizedScratchResultsSVM/",folderName))#
+#
+#dataString	<-  c("r8","r52")#
+#source("aistatsPaperPlots.R")#
+#
+#############
+#dataString	<-	c("20ng","webkb","r8","r52","cade","ohsumed")#
+dataName	<-	"cade"#
+source("aistatsAppendixPlots.R")
+rm(list=ls())#
+grid_arrange_shared_legend <- function(...) {#
+    plots <- list(...)#
+    g <- ggplotGrob(plots[[1]] + theme(legend.position="bottom"))$grobs#
+    legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]#
+    lheight <- sum(legend$height)#
+    grid.arrange(#
+        do.call(arrangeGrob, lapply(plots, function(x)#
+            x + theme(legend.position="none"))),#
+        legend,#
+        ncol = 1,#
+        heights = unit.c(unit(1, "npc") - lheight, lheight)#
+        )#
+        }#
+#
+folderName		<-	"10_10_2016_21:33"#
+myFiles			<-	list.files(paste0("regularizedScratchResultsSVM/",folderName))#
+#
+#dataString	<-  c("r8","r52")#
+#source("aistatsPaperPlots.R")#
+#
+#############
+#dataString	<-	c("20ng","webkb","r8","r52","cade","ohsumed")#
+dataName	<-	"ohsumed"#
+source("aistatsAppendixPlots.R")
+dataName
+rm(list=ls())#
+grid_arrange_shared_legend <- function(...) {#
+    plots <- list(...)#
+    g <- ggplotGrob(plots[[1]] + theme(legend.position="bottom"))$grobs#
+    legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]#
+    lheight <- sum(legend$height)#
+    grid.arrange(#
+        do.call(arrangeGrob, lapply(plots, function(x)#
+            x + theme(legend.position="none"))),#
+        legend,#
+        ncol = 1,#
+        heights = unit.c(unit(1, "npc") - lheight, lheight)#
+        )#
+        }#
+#
+folderName		<-	"10_10_2016_21:33"#
+myFiles			<-	list.files(paste0("regularizedScratchResultsSVM/",folderName))#
+#
+#dataString	<-  c("r8","r52")#
+#source("aistatsPaperPlots.R")#
+#
+#############
+#dataString	<-	c("20ng","webkb","r8","r52","cade","ohsumed")#
+dataName	<-	"20ng"#
+source("aistatsAppendixPlots.R")
+require(latex2exp)#
+library(ggplot2)#
+library(gridExtra)#
+library("grid")#
+rm(list=ls())#
+grid_arrange_shared_legend <- function(...) {#
+    plots <- list(...)#
+    g <- ggplotGrob(plots[[1]] + theme(legend.position="bottom"))$grobs#
+    legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]#
+    lheight <- sum(legend$height)#
+    grid.arrange(#
+        do.call(arrangeGrob, lapply(plots, function(x)#
+            x + theme(legend.position="none"))),#
+        legend,#
+        ncol = 1,#
+        heights = unit.c(unit(1, "npc") - lheight, lheight)#
+        )#
+        }#
+#
+folderName		<-	"10_10_2016_21:33"#
+myFiles			<-	list.files(paste0("regularizedScratchResultsSVM/",folderName))#
+#
+#dataString	<-  c("r8","r52")#
+#source("aistatsPaperPlots.R")#
+#
+#############
+#dataString	<-	c("20ng","webkb","r8","r52","cade","ohsumed")#
+dataName	<-	"r52"#
+source("aistatsAppendixPlots.R")
+dataName 	<- 	"20ng"
+##Need so helper functions, sparse matrix, performance etc.. #
+source("helper.R")#
+##PDM#
+source("PDMFaster.R")
+print(paste("loading",dataName))
+load(paste("../WorkingObjects/",dataName,"/",dataName,"_",K,".RData",sep=""))
+load(paste("../WorkingObjects/",dataName,"/",dataName,".RData",sep=""))
+ls()
+head(train)
+ls()
+list.files()
+ls()
+match(c("train","test"),ls())
+ls()[-match(c("train","test"),ls())]
+rm(list=ls()[-match(c("train","test"),ls())])
+ls()
+source("oracleFeatures.R")
+dataName 	<- 	"20ng"#
+print(paste("loading",dataName))#
+if(dataName!="cade"){#
+	load(paste("../WorkingObjects/",dataName,"/",dataName,".RData",sep=""))#
+	}#
+if(dataName=="cade"){#
+	load(paste("../../Disjunctions/workSpaces/",dataName,".RData",sep=""))#
+	}#
+#
+rm(list=ls()[-match(c("dataName","train","test"),ls())])
+require(e1071)#
+require(lda)#
+require(glmnet)#
+require(tm)#
+require(SparseM)#
+require(doSNOW)#
+require(foreach)#
+require(slam)#
+require(LiblineaR)#
+require(ROCR)
+require(slam)
+source("oracleFeatures.R")
+require(glmnet)
+install.packages("glmnet",dependencies=TRUE)
+ls()
+globalModel
+sh				<-	sample(nrow(train))
+sh
+sh				<-	sample(length(train))
+sh
+x=train[1]
+x
+strsplit(x,"\")
+strsplit(x,"\t")
+train_y			<-	sapply(train,function(x)strsplit(x)[[1]][1])
+train_y			<-	sapply(train,function(x)strsplit(x,"\t")[[1]][1])
+head(train_y)
+names(train_y)
+train_y			<-	sapply(train,function(x)strsplit(x,"\t")[[1]][1],USE.NAMES=FALSE)
+head(train_y)
+train_y			<-	sapply(train[sh],function(x)strsplit(x,"\t")[[1]][1],USE.NAMES=FALSE)
+train_x			<-	sapply(train[sh],function(x)strsplit(x,"\t")[[1]][2],USE.NAMES=FALSE)
+head(train_x)
+train_x			<-	sapply(test,function(x)strsplit(x,"\t")[[1]][2],USE.NAMES=FALSE)
+train_y			<-	sapply(train[sh],function(x)strsplit(x,"\t")[[1]][1],USE.NAMES=FALSE)#
+train_x			<-	sapply(train[sh],function(x)strsplit(x,"\t")[[1]][2],USE.NAMES=FALSE)#
+#
+test_y			<-	sapply(test,function(x)strsplit(x,"\t")[[1]][1],USE.NAMES=FALSE)#
+test_x			<-	sapply(test,function(x)strsplit(x,"\t")[[1]][2],USE.NAMES=FALSE)
+head(train_y)
+head(test_y)
+head(train_x)
+head(test_x)
+ldaCorpus		<-	lexicalize(train_x)
+K				<-	20
+eta				<-	.01
+lda.collapsed.gibbs.sampler(ldaCorpus$documents,K,lda$vocab,num.iterations=10,alpha=alpha,eta=eta)
+topicMod		<-	lda.collapsed.gibbs.sampler(ldaCorpus$documents,K,ldaCorpus$vocab,num.iterations=10,alpha=alpha,eta=eta)
+alpha			<-	K/50#
+eta				<-	.01#
+topicMod		<-	lda.collapsed.gibbs.sampler(ldaCorpus$documents,K,ldaCorpus$vocab,num.iterations=10,alpha=alpha,eta=eta)
+wordListPredictive
+install.packages("glmnet",dependencies=TRUE)
+require(e1071)#
+require(lda)#
+require(glmnet)#
+require(tm)#
+require(SparseM)#
+require(doSNOW)#
+require(foreach)#
+require(slam)
+require(glmnet)
+source("oracleFeatures.R")
+rm(list=ls()[-match(c("dataName","train","test"),ls())])
+y				<-	c(train_y,test_y)
+dataName 	<- 	"20ng"#
+print(paste("loading",dataName))#
+if(dataName!="cade"){#
+	load(paste("../WorkingObjects/",dataName,"/",dataName,".RData",sep=""))#
+	}#
+if(dataName=="cade"){#
+	load(paste("../../Disjunctions/workSpaces/",dataName,".RData",sep=""))#
+	}#
+#
+rm(list=ls()[-match(c("dataName","train","test"),ls())])#
+sh				<-	sample(length(train))#
+#
+train_y			<-	sapply(train[sh],function(x)strsplit(x,"\t")[[1]][1],USE.NAMES=FALSE)#
+train_x			<-	sapply(train[sh],function(x)strsplit(x,"\t")[[1]][2],USE.NAMES=FALSE)#
+#
+test_y			<-	sapply(test,function(x)strsplit(x,"\t")[[1]][1],USE.NAMES=FALSE)#
+test_x			<-	sapply(test,function(x)strsplit(x,"\t")[[1]][2],USE.NAMES=FALSE)#
+#
+y				<-	c(train_y,test_y)
+source("oracleFeatures.R")
+ls()
+wordListPredictive
+ldaCorpus		<-	lexicalize(train_x)#
+K				<-	20#
+alpha			<-	K/50#
+eta				<-	.01#
+topicMod		<-	lda.collapsed.gibbs.sampler(ldaCorpus$documents,K,ldaCorpus$vocab,num.iterations=10,alpha=alpha,eta=eta)
+topicMod$assignments[[1]]
+ldaCorpus$documents[[1]][1,]
+ldaCorpus$documents[[1]][1,]+1
+ldaCorpus$vocab[ldaCorpus$documents[[1]][1,]+1]
+pair			<-	c(1,2)
+ldaCorpus$vocab[ldaCorpus$documents[[pair[1]]][1,]+1]#
+topicMod$assignments[[pair[1]]]
+rbind(ldaCorpus$vocab[ldaCorpus$documents[[pair[1]]][1,]+1],#
+topicMod$assignments[[pair[1]]],)
+ldaCorpus$vocab[ldaCorpus$documents[[pair[1]]][1,]+1]
+rbind(ldaCorpus$vocab[ldaCorpus$documents[[pair[1]]][1,]+1],#
+topicMod$assignments[[pair[1]]])
+mat1			<-	rbind(ldaCorpus$vocab[ldaCorpus$documents[[pair[1]]][1,]+1],#
+topicMod$assignments[[pair[1]]])
+pair			<-	c(1,2)
+label1			<-	train_y[1]
+label1
+mat1			<-	rbind(ldaCorpus$vocab[ldaCorpus$documents[[pair[1]]][1,]+1],#
+topicMod$assignments[[pair[1]]])
+wordListPredictive[[label1]]
+match(mat1[1,],wordListPredictive[[label1]]
+match(mat1[1,],wordListPredictive[[label1]])
+mat1[1,]%in%wordListPredictive[[label1]]
+mat1[1,mat1[1,]%in%wordListPredictive[[label1]]]
+label2			<-	train_y[pair[2]]#
+mat2			<-	rbind(ldaCorpus$vocab[ldaCorpus$documents[[pair[2]]][1,]+1],#
+topicMod$assignments[[pair[2]]])#
+must2			<-	mat2[1,mat2[1,]%in%wordListPredictive[[label2]]]
+must2
+interactiveMod	<-	lda.collapsed.gibbs.sampler(ldaCorpus$documents, K, ldaCorpus$vocab, 10, alpha= alpha, eta=eta)
+getwd()
+require(e1071)#
+require(lda)#
+require(glmnet)#
+require(tm)#
+require(SparseM)#
+require(doSNOW)#
+require(foreach)#
+require(slam)#
+require(LiblineaR)#
+require(ROCR)
+install.packages("e1071")
+require(e1071)#
+require(lda)#
+require(glmnet)#
+require(tm)#
+require(SparseM)#
+require(doSNOW)#
+require(foreach)#
+require(slam)#
+require(LiblineaR)#
+require(ROCR)
+install.packages("ROCR")
+require(e1071)#
+require(lda)#
+require(glmnet)#
+require(tm)#
+require(SparseM)#
+require(doSNOW)#
+require(foreach)#
+require(slam)#
+require(LiblineaR)#
+require(ROCR)
+require(e1071)#
+require(lda)#
+require(glmnet)#
+require(tm)#
+require(SparseM)#
+require(doSNOW)#
+require(foreach)#
+require(slam)#
+require(LiblineaR)#
+require(ROCR)
+install.packages("LiblineaR")
+require(e1071)#
+require(lda)#
+require(glmnet)#
+require(tm)#
+require(SparseM)#
+require(doSNOW)#
+require(foreach)#
+require(slam)#
+require(LiblineaR)#
+require(ROCR)
+dataName="20ng"
+dataName<-"20ng";features<-"tfidf";boost<-20;final<-8000
+print(final)#
+tau			<-	.05#
+lambda		<-	20#
+n0			<-	0#
+method		<-	2#
+probThresh	<-	.75 #
+numIters	<-	5
+source("helper.R")
+source("PDMFaster.R")
+FscoreErr<- function(y,prediction){(1-myperformance(as.character(prediction),as.character(y),"fmeasure"))}
+print(paste("loading",dataName))
+if(dataName!="cade"){#
+	if(exists("K")){	#
+	load(paste("../WorkingObjects/",dataName,"/",dataName,"_",K,".RData",sep=""))#
+	}#
+	if(!exists("K")){#
+	load(paste("../WorkingObjects/",dataName,"/",dataName,".RData",sep=""))#
+	}#
+	}#
+if(dataName=="cade"){#
+	load(paste("../../Disjunctions/workSpaces/",dataName,".RData",sep=""))#
+	}
+ls()
+y	<-	c(train_y,test_y)
+print(exists("globalModel"))
+print(exists("wordListPredictive"))
+processedData[[1]]	<-	processedData[[1]][,col_sums(processedData[[1]])>2]
+if(features=="tfidf"){	BOW_tfidf	<-	weightTfIdf(processedData[[1]],normalize=TRUE)}
+dim(BOW_tfidf)
+dim(processedData[[1]])
+BOW_tfidf[12367,]
+source("oracleFeatures.R")
+ls()
+wordListPredictive
+train_BOW	<-	BOW_tfidf[1:length(train_y),]
+train_BOW
+test_BOW	<-	BOW_tfidf[(length(train_x)+1):nrow(s_X),]
+dim(lda_train)
+dim(test_train)
+dim(lda_test)
+getwd()
+require(RJSONIO)
+setwd("data/20ng")
+export_json			<-	toJSON(strings_for_phrases)
+export_json			<-	toJSON(wordListPredictive)
+export_json
+write(export_json,file="oracle_features.json"))
+write(export_json,file="oracle_features.json")
+rm(list=ls())
+setwd("../../")
+dataName<-"20ng";features<-"tfidf";boost<-20;final<-8000;
+print(final)#
+tau			<-	.05#
+lambda		<-	20#
+n0			<-	0#
+method		<-	2#
+probThresh	<-	.75 #
+numIters	<-	5
+load(paste("../WorkingObjects/",dataName,"/",dataName,".RData",sep=""))
+ls()
+length(train_y)
+length(train_x)
+head(train_x)
+train_x[1]
+setwd("data/20ng")
+list.files()
+write.table(train_x,file="train_x.csv",col.names=FALSE,row.names=FALSE)
+write.table(train_y,file="train_y.csv",col.names=FALSE,row.names=FALSE)
+write.table(test_x,file="test_x.csv",col.names=FALSE,row.names=FALSE)
+write.table(test_y,file="test_y.csv",col.names=FALSE,row.names=FALSE)
+ls()
+dim(lda_test)
+write.table(lda_train,file="train_lda_200.csv",col.names=FALSE,row.names=FALSE)
+write.table(lda_test,file="test_lda_200.csv",col.names=FALSE,row.names=FALSE)
+write.table(lda_train,file=paste0("train_lda_",K,".csv"),col.names=FALSE,row.names=FALSE)#
+write.table(lda_test,file=paste0("test_lda_",K,".csv"),col.names=FALSE,row.names=FALSE)
+rm(list=ls())
+dataName="r8"
+load(paste("../WorkingObjects/",dataName,"/",dataName,".RData",sep=""))
+getwd()
+setwd("..")
+load(paste("../WorkingObjects/",dataName,"/",dataName,".RData",sep=""))
+dataName="R*"
+dataName="R8"
+load(paste("../WorkingObjects/",dataName,"/",dataName,".RData",sep=""))
+paste("../WorkingObjects/",dataName,"/",dataName,".RData",sep="")
+list.files()
+setwd("..")
+dataName="r8"
+load(paste("../WorkingObjects/",dataName,"/",dataName,".RData",sep=""))
+setwd(paste0("data",dataName))
+source("oracleFeatures.R")
+setwd(paste0("data/",dataName))
+export_json			<-	toJSON(wordListPredictive)
+write(export_json,file="oracle_features.json")
+write.table(train_x,file="train_x.csv",col.names=FALSE,row.names=FALSE)
+write.table(train_y,file="train_y.csv",col.names=FALSE,row.names=FALSE)
+write.table(test_x,file="test_x.csv",col.names=FALSE,row.names=FALSE)
+write.table(test_y,file="test_y.csv",col.names=FALSE,row.names=FALSE)
+write.table(lda_train,file=paste0("train_lda_",K,".csv"),col.names=FALSE,row.names=FALSE)#
+write.table(lda_test,file=paste0("test_lda_",K,".csv"),col.names=FALSE,row.names=FALSE)
+rm(list=ls())
+setwd("../../")
+dataName	<-	"r52"
+if(dataName!="cade"){#
+	if(exists("K")){	#
+	load(paste("../WorkingObjects/",dataName,"/",dataName,"_",K,".RData",sep=""))#
+	}#
+	if(!exists("K")){#
+	load(paste("../WorkingObjects/",dataName,"/",dataName,".RData",sep=""))#
+	}#
+	}#
+if(dataName=="cade"){#
+	load(paste("../../Disjunctions/workSpaces/",dataName,".RData",sep=""))#
+	}#
+#
+source("oracleFeatures.R")
+rm(list=ls())#
+setwd("../../")#
+dataName	<-	"r52"#
+#
+if(dataName!="cade"){#
+	if(exists("K")){	#
+	load(paste("../WorkingObjects/",dataName,"/",dataName,"_",K,".RData",sep=""))#
+	}#
+	if(!exists("K")){#
+	load(paste("../WorkingObjects/",dataName,"/",dataName,".RData",sep=""))#
+	}#
+	}#
+if(dataName=="cade"){#
+	load(paste("../../Disjunctions/workSpaces/",dataName,".RData",sep=""))#
+	}#
+#
+y	<-	c(train_y,test_y)#
+source("oracleFeatures.R")#
+#
+setwd(paste0("data/",dataName))#
+export_json			<-	toJSON(wordListPredictive)#
+#
+write(export_json,file="oracle_features.json")#
+#
+write.table(train_x,file="train_x.csv",col.names=FALSE,row.names=FALSE)#
+write.table(train_y,file="train_y.csv",col.names=FALSE,row.names=FALSE)#
+#
+write.table(test_x,file="test_x.csv",col.names=FALSE,row.names=FALSE)#
+write.table(test_y,file="test_y.csv",col.names=FALSE,row.names=FALSE)#
+#
+write.table(lda_train,file=paste0("train_lda_",K,".csv"),col.names=FALSE,row.names=FALSE)#
+write.table(lda_test,file=paste0("test_lda_",K,".csv"),col.names=FALSE,row.names=FALSE)
+getwd()
+setwd("../../")
+setwd("Research/FBLA/ICML16/code")
+rm(list=ls())
+dataName	<-	"r52"#
+#
+if(dataName!="cade"){#
+	if(exists("K")){	#
+	load(paste("../WorkingObjects/",dataName,"/",dataName,"_",K,".RData",sep=""))#
+	}#
+	if(!exists("K")){#
+	load(paste("../WorkingObjects/",dataName,"/",dataName,".RData",sep=""))#
+	}#
+	}#
+if(dataName=="cade"){#
+	load(paste("../../Disjunctions/workSpaces/",dataName,".RData",sep=""))#
+	}#
+#
+y	<-	c(train_y,test_y)#
+source("oracleFeatures.R")
+install.packages("SnowballC")
+rm(list=ls())
+dataName	<-	"r52"#
+#
+if(dataName!="cade"){#
+	if(exists("K")){	#
+	load(paste("../WorkingObjects/",dataName,"/",dataName,"_",K,".RData",sep=""))#
+	}#
+	if(!exists("K")){#
+	load(paste("../WorkingObjects/",dataName,"/",dataName,".RData",sep=""))#
+	}#
+	}#
+if(dataName=="cade"){#
+	load(paste("../../Disjunctions/workSpaces/",dataName,".RData",sep=""))#
+	}#
+#
+y	<-	c(train_y,test_y)#
+source("oracleFeatures.R")
+BOW_tfidf	<-	weightTfIdf(processedData[[1]],normalize=TRUE)
+source("oracleFeatures.R")
+rm(list=ls())
+dataName	<-	"r52"#
+#
+if(dataName!="cade"){#
+	if(exists("K")){	#
+	load(paste("../WorkingObjects/",dataName,"/",dataName,"_",K,".RData",sep=""))#
+	}#
+	if(!exists("K")){#
+	load(paste("../WorkingObjects/",dataName,"/",dataName,".RData",sep=""))#
+	}#
+	}#
+if(dataName=="cade"){#
+	load(paste("../../Disjunctions/workSpaces/",dataName,".RData",sep=""))#
+	}#
+#
+y	<-	c(train_y,test_y)#
+BOW_tfidf	<-	weightTfIdf(processedData[[1]],normalize=TRUE)#
+source("oracleFeatures.R")#
+#
+setwd(paste0("data/",dataName))#
+export_json			<-	toJSON(wordListPredictive)#
+#
+write(export_json,file="oracle_features.json")#
+#
+write.table(train_x,file="train_x.csv",col.names=FALSE,row.names=FALSE)#
+write.table(train_y,file="train_y.csv",col.names=FALSE,row.names=FALSE)#
+#
+write.table(test_x,file="test_x.csv",col.names=FALSE,row.names=FALSE)#
+write.table(test_y,file="test_y.csv",col.names=FALSE,row.names=FALSE)#
+#
+write.table(lda_train,file=paste0("train_lda_",K,".csv"),col.names=FALSE,row.names=FALSE)#
+write.table(lda_test,file=paste0("test_lda_",K,".csv"),col.names=FALSE,row.names=FALSE)
+rm(list=ls())#
+setwd("../../")#
+dataName	<-	"cade"#
+#
+if(dataName!="cade"){#
+	if(exists("K")){	#
+	load(paste("../WorkingObjects/",dataName,"/",dataName,"_",K,".RData",sep=""))#
+	}#
+	if(!exists("K")){#
+	load(paste("../WorkingObjects/",dataName,"/",dataName,".RData",sep=""))#
+	}#
+	}#
+if(dataName=="cade"){#
+	load(paste("../../Disjunctions/workSpaces/",dataName,".RData",sep=""))#
+	}#
+#
+y	<-	c(train_y,test_y)#
+BOW_tfidf	<-	weightTfIdf(processedData[[1]],normalize=TRUE)#
+source("oracleFeatures.R")#
+#
+setwd(paste0("data/",dataName))#
+export_json			<-	toJSON(wordListPredictive)#
+#
+write(export_json,file="oracle_features.json")#
+#
+write.table(train_x,file="train_x.csv",col.names=FALSE,row.names=FALSE)#
+write.table(train_y,file="train_y.csv",col.names=FALSE,row.names=FALSE)#
+#
+write.table(test_x,file="test_x.csv",col.names=FALSE,row.names=FALSE)#
+write.table(test_y,file="test_y.csv",col.names=FALSE,row.names=FALSE)#
+#
+write.table(lda_train,file=paste0("train_lda_",K,".csv"),col.names=FALSE,row.names=FALSE)#
+write.table(lda_test,file=paste0("test_lda_",K,".csv"),col.names=FALSE,row.names=FALSE)
+rm(list=ls())#
+setwd("../../")#
+dataName	<-	"webkb"#
+#
+if(dataName!="cade"){#
+	if(exists("K")){	#
+	load(paste("../WorkingObjects/",dataName,"/",dataName,"_",K,".RData",sep=""))#
+	}#
+	if(!exists("K")){#
+	load(paste("../WorkingObjects/",dataName,"/",dataName,".RData",sep=""))#
+	}#
+	}#
+if(dataName=="cade"){#
+	load(paste("../../Disjunctions/workSpaces/",dataName,".RData",sep=""))#
+	}#
+#
+y	<-	c(train_y,test_y)#
+BOW_tfidf	<-	weightTfIdf(processedData[[1]],normalize=TRUE)#
+source("oracleFeatures.R")#
+#
+setwd(paste0("data/",dataName))#
+export_json			<-	toJSON(wordListPredictive)#
+#
+write(export_json,file="oracle_features.json")#
+#
+write.table(train_x,file="train_x.csv",col.names=FALSE,row.names=FALSE)#
+write.table(train_y,file="train_y.csv",col.names=FALSE,row.names=FALSE)#
+#
+write.table(test_x,file="test_x.csv",col.names=FALSE,row.names=FALSE)#
+write.table(test_y,file="test_y.csv",col.names=FALSE,row.names=FALSE)#
+#
+write.table(lda_train,file=paste0("train_lda_",K,".csv"),col.names=FALSE,row.names=FALSE)#
+write.table(lda_test,file=paste0("test_lda_",K,".csv"),col.names=FALSE,row.names=FALSE)
+rm(list=ls())#
+setwd("../../")#
+dataName	<-	"ohsumed"#
+#
+if(dataName!="cade"){#
+	if(exists("K")){	#
+	load(paste("../WorkingObjects/",dataName,"/",dataName,"_",K,".RData",sep=""))#
+	}#
+	if(!exists("K")){#
+	load(paste("../WorkingObjects/",dataName,"/",dataName,".RData",sep=""))#
+	}#
+	}#
+if(dataName=="cade"){#
+	load(paste("../../Disjunctions/workSpaces/",dataName,".RData",sep=""))#
+	}#
+#
+y	<-	c(train_y,test_y)#
+BOW_tfidf	<-	weightTfIdf(processedData[[1]],normalize=TRUE)#
+source("oracleFeatures.R")#
+#
+setwd(paste0("data/",dataName))#
+export_json			<-	toJSON(wordListPredictive)#
+#
+write(export_json,file="oracle_features.json")#
+#
+write.table(train_x,file="train_x.csv",col.names=FALSE,row.names=FALSE)#
+write.table(train_y,file="train_y.csv",col.names=FALSE,row.names=FALSE)#
+#
+write.table(test_x,file="test_x.csv",col.names=FALSE,row.names=FALSE)#
+write.table(test_y,file="test_y.csv",col.names=FALSE,row.names=FALSE)#
+#
+write.table(lda_train,file=paste0("train_lda_",K,".csv"),col.names=FALSE,row.names=FALSE)#
+write.table(lda_test,file=paste0("test_lda_",K,".csv"),col.names=FALSE,row.names=FALSE)
